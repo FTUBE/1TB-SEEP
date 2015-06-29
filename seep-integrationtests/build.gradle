@@ -1,0 +1,8 @@
+
+dependencies {
+	compile project(':seep-common')
+	compile project(':seep-master')
+	compile project(':seep-worker')
+	compile project(':seep-contrib')
+	compile project(':seep-java2sdg')
+}

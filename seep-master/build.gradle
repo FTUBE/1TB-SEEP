@@ -1,0 +1,37 @@
+// Applying and configuring application
+apply plugin: 'application'
+mainClassName = 'uk.ac.imperial.lsds.seepmaster.Main'
+applicationDefaultJvmArgs = []
+
+// All dependencies
+dependencies {
+	compile project(':seep-common')
+	compile 'org.apache.commons:commons-collections4:4.0'
+	compile 'org.eclipse.jetty:jetty-server:9.2.9.v20150224'
+	compile 'org.eclipse.jetty:jetty-servlet:9.2.9.v20150224'
+	compile 'commons-fileupload:commons-fileupload:1.3.1'
+}
+
+// Special task to create an standalone distribution
+task distStandaloneJar(type: Jar){
+	description "Builds and creates one Fat Jar that includes all \
+			dependencies"
+        from { 
+    		configurations.compile.collect { 
+			it.isDirectory() ? it : zipTree(it) 
+	    	} 
+	} 
+	{
+		exclude 'META-INF/*.RSA'
+		exclude 'META-INF/*.SF'
+		exclude 'META-INF/*.DSA'
+	}
+	with jar 
+	manifest {
+		attributes 'Main-Class': 'uk.ac.imperial.lsds.seepmaster.Main'
+	}
+}
+
+// Configure the output of the installApp task of the application plugin
+installApp.destinationDir = file("$projectDir.parent/install/$project.name")
+distZip.destinationDir = file("$projectDir.parent/dist/$project.name")
