@@ -1,7 +1,11 @@
 package uk.ac.imperial.lsds.seepworker.core;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.ReadableByteChannel;
@@ -28,8 +32,6 @@ import uk.ac.imperial.lsds.seepworker.WorkerConfig;
 public class FileSelector {
 
 	final private static Logger LOG = LoggerFactory.getLogger(FileSelector.class);
-	
-	private int numUpstreamResources;
 	
 	private Reader reader;
 	private Thread readerWorker;
@@ -72,28 +74,22 @@ public class FileSelector {
 	
 	public void configureAccept(Map<Integer, DataStore> fileOrigins, Map<Integer, InputAdapter> dataAdapters){
 		this.dataAdapters = dataAdapters;
-		this.numUpstreamResources = fileOrigins.size();
 		this.reader = new Reader();
 		this.readerWorker = new Thread(this.reader);
 		this.readerWorker.setName("File-Reader");
 		
-		Map<SeekableByteChannel, Integer> channels = new HashMap<>();
+		Map<BufferedReader, Integer> channels = new HashMap<>();
 		for(Entry<Integer, DataStore> e : fileOrigins.entrySet()){
 			try {
 				FileConfig config = new FileConfig(e.getValue().getConfig());
 				String absPath = Utils.absolutePath(config.getString(FileConfig.FILE_PATH));
-				URI uri = new URI(Utils.FILE_URI_SCHEME + absPath);
-				LOG.info("Created URI to local resource: {}", uri.toString());
-				Path resource = Paths.get(uri);
-				LOG.info("Configuring file channel: {}", resource.toString());
-				SeekableByteChannel sbc = Files.newByteChannel(resource, StandardOpenOption.READ);
-				channels.put(sbc, e.getKey());
+				File file = new File(absPath);
+				LOG.info("Created URI to local resource: {}", file.toString());
+				BufferedReader br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+				channels.put(br, e.getKey());
 			} 
 			catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();
-			} 
-			catch (URISyntaxException use) {
-				use.printStackTrace();
 			} 
 			catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -103,7 +99,7 @@ public class FileSelector {
 	}
 	
 	public void addNewAccept(Path resource, int id, Map<Integer, InputAdapter> dataAdapters){
-		this.dataAdapters = dataAdapters;
+		/*this.dataAdapters = dataAdapters;
 		Map<SeekableByteChannel, Integer> channels = new HashMap<>();
 		SeekableByteChannel sbc = null;
 		try {
@@ -117,7 +113,7 @@ public class FileSelector {
 		this.reader = new Reader();
 		this.readerWorker = new Thread(this.reader);
 		this.readerWorker.setName("File-Reader");
-		this.reader.availableChannels(channels);
+		this.reader.availableChannels(channels);*/
 	}
 	
 	public void configureDownstreamFiles(Map<Integer, DataStore> fileDest){
@@ -128,19 +124,18 @@ public class FileSelector {
 	class Reader implements Runnable {
 
 		private boolean working = true;
-		private Selector readSelector;
-		private Map<SeekableByteChannel, Integer> channels;
+		private Map<BufferedReader, Integer> channels;
 		
 		public Reader(){
 			try {
-				this.readSelector = Selector.open();
+				Selector.open();
 			}
 			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		public void availableChannels(Map<SeekableByteChannel, Integer> channels){
+		public void availableChannels(Map<BufferedReader, Integer> channels){
 			this.channels = channels;
 		}
 		
@@ -152,16 +147,29 @@ public class FileSelector {
 		public void run() {
 			LOG.info("Started File Reader worker: {}", Thread.currentThread().getName());
 			while(working){
-				for(Entry<SeekableByteChannel, Integer> e: channels.entrySet()){
+				for(Entry<BufferedReader, Integer> e: channels.entrySet()){
 					int id = e.getValue();
-					ReadableByteChannel rbc = e.getKey();
+					BufferedReader br = e.getKey();
 					InputAdapter ia = dataAdapters.get(id);
+					byte[] data = null;
+					String read = null;
+					try {
+						read = br.readLine();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					if(read != null){
+						data = read.getBytes(); 
+						ia.pushData(data);
+					}
+					/*
 					if(rbc.isOpen()){
 						ia.readFrom(rbc, id);
 					}
 					else{
 						working = false;
-					}
+					}*/
 				}
 			}
 			LOG.info("Finished File Reader worker: {}", Thread.currentThread().getName());
@@ -169,7 +177,7 @@ public class FileSelector {
 		}
 		
 		private void closeReader(){
-			for(SeekableByteChannel sbc : channels.keySet()){
+			for(BufferedReader sbc : channels.keySet()){
 				try {
 					sbc.close();
 				} 

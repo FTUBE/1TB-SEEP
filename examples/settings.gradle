@@ -9,4 +9,5 @@ include \
 	"simple-sourcefile-stateless-query",
 	"simple-kafka-stateless-pipeline",
 	"simple-hdfs-stateless-query",
-	"MRex"
+	"MRex",
+	"1tb"

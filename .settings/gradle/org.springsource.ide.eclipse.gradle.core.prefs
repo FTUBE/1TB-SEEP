@@ -1,0 +1,5 @@
+#org.springsource.ide.eclipse.gradle.core.preferences.GradleProjectPreferences
+#Mon Jun 29 23:46:10 BST 2015
+build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;seep-common;seep-contrib;seep-integrationtests;seep-java2sdg;seep-master;seep-worker;
+org.springsource.ide.eclipse.gradle.linkedresources=
+org.springsource.ide.eclipse.gradle.rootprojectloc=
