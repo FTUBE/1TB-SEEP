@@ -1,5 +1,7 @@
 package uk.ac.imperial.lsds.seepworker.core.input;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class FileDataStream implements InputAdapter {
 	private InputBuffer buffer;
 	private BlockingQueue<byte[]> queue;
 	private int queueSize;
+	
+	private BufferedReader br;
 	
 	public FileDataStream(WorkerConfig wc, int opId, int streamId, Schema expectedSchema){
 		this.streamId = streamId;
@@ -74,7 +78,7 @@ public class FileDataStream implements InputAdapter {
 
 	@Override
 	public void readFrom(ReadableByteChannel channel, int id) {
-		buffer.readFrom(channel, this);
+		//buffer.readFrom(channel, this);
 	}
 
 	@Override
@@ -97,22 +101,23 @@ public class FileDataStream implements InputAdapter {
 	@Override
 	public ITuple pullDataItem(int timeout) {
 		byte[] data = null;
+		String read=null;
+		//read = "hfuewhfuiwehf";
 		try {
-			if(timeout > 0){
-				// Need to poll rather than take due to the implementation of some ProcessingEngines
-				data = queue.poll(timeout, TimeUnit.MILLISECONDS);
-			} else{
-				data = queue.take();
-			}
-		}
-		catch (InterruptedException e) {
+			read = br.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}		
+		if(read !=null){
+		data = read.getBytes();
 		}
+
 		// In case poll was used, and it timeouts
 		if(data == null){
 			return null;
 		}
-		iTuple.setData(data);
+		iTuple.setRawData(data);
 		iTuple.setStreamId(streamId);
 		return iTuple;
 	}
@@ -121,6 +126,10 @@ public class FileDataStream implements InputAdapter {
 	public ITuple pullDataItems(int timeout) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void availablebr(BufferedReader br) {
+		this.br=br;
 	}
 
 }

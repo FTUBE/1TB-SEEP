@@ -41,6 +41,9 @@ public class SingleThreadProcessingEngine implements ProcessingEngine {
 	// Metrics
 	final private Meter m;
 	
+	private int count=0;
+	private double start = 0;
+	private boolean set = false;
 	public SingleThreadProcessingEngine(WorkerConfig wc) {
 		this.MAX_BLOCKING_TIME_PER_INPUTADAPTER_MS = wc.getInt(WorkerConfig.MAX_WAIT_TIME_PER_INPUTADAPTER_MS);
 		this.worker = new Thread(new Worker());
@@ -114,39 +117,39 @@ public class SingleThreadProcessingEngine implements ProcessingEngine {
 			List<OutputAdapter> outputAdapters = coreOutput.getOutputAdapters();
 			LOG.info("Configuring SINGLETHREAD processing engine with {} outputAdapters", outputAdapters.size());
 			API api = new Collector(id, outputAdapters);
+			int pointer = 0;
+			int ia_len = inputAdapters.size();
 			while(working) {
-				while(it.hasNext()){
-					InputAdapter ia = it.next();
-					if(ia.returnType() == one){
+				while(pointer<ia_len){
+					InputAdapter ia = inputAdapters.get(pointer);
+					pointer++;
 						DataItem di = ia.pullDataItem(MAX_BLOCKING_TIME_PER_INPUTADAPTER_MS);
 						if(di != null){
-							boolean consume = true;
-							while(consume) {
+							//boolean consume = true;
+							//while(consume) {
 								ITuple d = di.consume();
-								if(d != null) {
-									task.processData(d, api);
-									m.mark();
-								} else consume = false;
-							}
+								//ITuple d = (ITuple) di;
+								//if(d != null) {
+									task.processData(d, api);									
+									/*if(!set){
+										start = System.currentTimeMillis();
+										set = true;
+									}*/
+									/*count++;
+									byte[] d = OTuple.create(schema, new String[]{"id", "user"}, new Object[]{1, "1010101010"});
+									if(count % 500000 == 0){
+										double totalsize = count*16;
+										double end = System.currentTimeMillis();
+										double time = (end-start)/1000;
+										System.out.println((totalsize/time)/1000000+"MB/s");
+									}*/
+									//m.mark();
+								//} else consume = false;
+							//}
 						}
-					}
-					else if(ia.returnType() == many){
-						DataItem ld = ia.pullDataItems(MAX_BLOCKING_TIME_PER_INPUTADAPTER_MS);
-						if(ld != null){
-							boolean consume = true;
-							while(consume) {
-								ITuple d = ld.consume();
-								if(d != null){
-									task.processDataGroup(d, api);
-									m.mark();
-								}
-								else consume = false;
-							}
-							
-						}
-					}
-					if(!it.hasNext() && working){
-						it = inputAdapters.iterator();
+					if(!(pointer<ia_len) && working){
+						pointer = 0;
+						//it = inputAdapters.iterator();
 					}
 				}
 				// If there are no input adapters, assume processData contain all necessary and give null input data

@@ -13,6 +13,7 @@ public class Middle implements SeepTask {
 
 	@Override
 	public void processData(ITuple data, API api) {
+		
 	}
 	
 	private void waitHere(int time){

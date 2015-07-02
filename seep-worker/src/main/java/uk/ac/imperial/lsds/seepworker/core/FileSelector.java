@@ -28,6 +28,7 @@ import uk.ac.imperial.lsds.seep.core.InputAdapter;
 import uk.ac.imperial.lsds.seep.errors.NotImplementedException;
 import uk.ac.imperial.lsds.seep.util.Utils;
 import uk.ac.imperial.lsds.seepworker.WorkerConfig;
+import uk.ac.imperial.lsds.seepworker.core.input.FileDataStream;
 
 public class FileSelector {
 
@@ -46,10 +47,11 @@ public class FileSelector {
 	
 	public void startFileSelector(){
 		// Start readers
-		if(readerWorker != null){
+		/*if(readerWorker != null){
 			LOG.info("Starting reader: {}", readerWorker.getName());
 			readerWorker.start();
-		}
+		}*/
+		LOG.info("Nothing for reader");
 	
 		// Start writers
 		if(writerWorker != null){
@@ -74,11 +76,9 @@ public class FileSelector {
 	
 	public void configureAccept(Map<Integer, DataStore> fileOrigins, Map<Integer, InputAdapter> dataAdapters){
 		this.dataAdapters = dataAdapters;
-		this.reader = new Reader();
-		this.readerWorker = new Thread(this.reader);
-		this.readerWorker.setName("File-Reader");
-		
-		Map<BufferedReader, Integer> channels = new HashMap<>();
+		//this.reader = new Reader();
+		//this.readerWorker = new Thread(this.reader);
+		//this.readerWorker.setName("File-Reader");
 		for(Entry<Integer, DataStore> e : fileOrigins.entrySet()){
 			try {
 				FileConfig config = new FileConfig(e.getValue().getConfig());
@@ -86,7 +86,8 @@ public class FileSelector {
 				File file = new File(absPath);
 				LOG.info("Created URI to local resource: {}", file.toString());
 				BufferedReader br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-				channels.put(br, e.getKey());
+				FileDataStream fs = (FileDataStream)dataAdapters.get(e.getKey());
+				fs.availablebr(br);
 			} 
 			catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();
@@ -95,7 +96,6 @@ public class FileSelector {
 				ioe.printStackTrace();
 			}
 		}
-		this.reader.availableChannels(channels);
 	}
 	
 	public void addNewAccept(Path resource, int id, Map<Integer, InputAdapter> dataAdapters){

@@ -6,17 +6,28 @@ import uk.ac.imperial.lsds.seep.api.data.Schema;
 import uk.ac.imperial.lsds.seep.api.data.Type;
 import uk.ac.imperial.lsds.seep.api.data.Schema.SchemaBuilder;
 
-
 public class Leaf implements SeepTask {
 
 	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.STRING, "user").build();
-
+	int count = 0;
+	boolean set = false;
+	double start = 0;
 	@Override
-	public void processData(ITuple data, API api) {
-		String line = new String(data.getData());
-		//byte[] d = OTuple.create(schema, new String[]{"param1", "param2"}, new Object[]{param1, param2});
-		System.out.println("Data received: "+line);
-		//api.send(d);		
+	public void processData(ITuple data, API api) {	
+		if(!set){
+			set = true;
+			start = System.currentTimeMillis();
+		}
+		//String line = new String(data.getData());
+		//byte[] d = OTuple.create(schema, new String[]{"id", "user"}, new Object[]{1, "1010101010"});
+		count++;
+		if(count % 500000 == 0){
+			double totalsize = count*16;
+			double end = System.currentTimeMillis();
+			double time = (end-start)/1000;
+			System.out.println((totalsize/time)/1000000+"MB/s");
+		}
+		//api.send(d);	
 		//waitHere(10);
 	}
 	

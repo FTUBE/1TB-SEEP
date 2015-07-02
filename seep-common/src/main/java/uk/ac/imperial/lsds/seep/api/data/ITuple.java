@@ -225,5 +225,10 @@ public class ITuple implements DataItem{
 		}
 		return sb.toString();
 	}
+
+	public void setRawData(byte[] _d) {
+		this.consumed = false;
+		this.data = _d;
+	}
 	
 }
