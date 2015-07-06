@@ -25,6 +25,7 @@ public class ITuple implements DataItem{
 	private Map<String, Integer> mapFieldToOffset;
 	private ByteBuffer wrapper;
 	private byte[] data;
+	private String raw_d;
 	
 	private List<ITuple> dataCol;
 	private Iterator<ITuple> it;
@@ -93,6 +94,10 @@ public class ITuple implements DataItem{
 	
 	public byte[] getData(){
 		return data;
+	}
+	
+	public String getRaw(){
+		return raw_d;
 	}
 	
 	/** Consider moving these fields to a different interface to not expose the rest to users? **/
@@ -226,9 +231,9 @@ public class ITuple implements DataItem{
 		return sb.toString();
 	}
 
-	public void setRawData(byte[] _d) {
+	public void setRawData(String _d) {
 		this.consumed = false;
-		this.data = _d;
+		this.raw_d = _d;
 	}
 	
 }

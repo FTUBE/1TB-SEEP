@@ -13,6 +13,7 @@ public class Schema {
 	private final Type[] fields;
 	private final String[] names;
 	private final boolean variableSize;
+	public final char[] denote;
 	// Maps fieldName to fieldPosition (fields are ordered in a certain way)
 	private Map<String, Integer> mapFieldNameToFieldPosition = new HashMap<>();
 		
@@ -21,10 +22,14 @@ public class Schema {
 		this.fields = fields;
 		this.names = names;
 		boolean variableSizeSchema = false;
+		denote = new char[names.length];
 		for(int i = 0; i < names.length; i++){
+			String classn = fields[i].getClass().getName();
+			denote[i] = classn.charAt(classn.length()-1);
 			mapFieldNameToFieldPosition.put(names[i], i);
 			if(fields[i].isVariableSize()) variableSizeSchema = true;
 		}
+		//System.out.println(denote);
 		this.variableSize = variableSizeSchema;
 	}
 	

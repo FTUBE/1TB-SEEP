@@ -100,7 +100,6 @@ public class FileDataStream implements InputAdapter {
 
 	@Override
 	public ITuple pullDataItem(int timeout) {
-		byte[] data = null;
 		String read=null;
 		//read = "hfuewhfuiwehf";
 		try {
@@ -108,16 +107,11 @@ public class FileDataStream implements InputAdapter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		if(read !=null){
-		data = read.getBytes();
-		}
-
-		// In case poll was used, and it timeouts
-		if(data == null){
+			}
+		if(read == null){
 			return null;
 		}
-		iTuple.setRawData(data);
+		iTuple.setRawData(read);
 		iTuple.setStreamId(streamId);
 		return iTuple;
 	}

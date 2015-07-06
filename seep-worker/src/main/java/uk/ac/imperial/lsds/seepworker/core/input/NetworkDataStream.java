@@ -25,7 +25,7 @@ public class NetworkDataStream implements InputAdapter{
 	final private DataStoreType TYPE = DataStoreType.NETWORK;
 	
 	private InputBuffer buffer;
-	private BlockingQueue<DataItem> queue;
+	private BlockingQueue<byte[]> queue;
 	private int queueSize;
 	
 	final private List<Integer> representedIds;
@@ -34,7 +34,6 @@ public class NetworkDataStream implements InputAdapter{
 	private RowBatchITupleBuilder appBatch;
 	
 	// Metrics
-	final Counter qSize;
 	
 	public NetworkDataStream(WorkerConfig wc, int opId, int streamId, Schema expectedSchema) {
 		this.representedIds = new ArrayList<>();
@@ -45,8 +44,6 @@ public class NetworkDataStream implements InputAdapter{
 		this.queue = new ArrayBlockingQueue<>(queueSize);
 		int headroom = wc.getInt(WorkerConfig.BATCH_SIZE) * 2;
 		this.buffer = new InputBuffer(headroom);
-		this.appBatch = new RowBatchITupleBuilder(wc.getInt(WorkerConfig.APP_BATCH_SIZE), iTuple, streamId);
-		qSize = SeepMetrics.REG.counter(name(NetworkDataStream.class, "queue", "size"));
 	}
 	
 	@Override
@@ -76,24 +73,19 @@ public class NetworkDataStream implements InputAdapter{
 	
 	@Override
 	public void pushData(byte[] data){
-		boolean full = appBatch.add(data);
-		if(full){
-			RowBatchITuple dataItem = appBatch.build();
 			try {
-				queue.put(dataItem);
+				queue.put(data);
 			} 
 			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			// Clean builder for next iteration
-			appBatch.reset();
-		}
 	}
 	
 	@Override
 	public DataItem pullDataItem(int timeout){
-		DataItem data = null;
+		byte[] data = null;
 		try {
 			if(timeout >= 0){
 				// Need to poll rather than take due to the implementation of some ProcessingEngines
@@ -109,8 +101,9 @@ public class NetworkDataStream implements InputAdapter{
 		if(data == null){
 			return null;
 		}
-		qSize.dec(); // decrement only when is not null
-		return data;
+		iTuple.setData(data);
+		iTuple.setStreamId(streamId);
+		return iTuple;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class OTuple {
 	public OTuple(Schema schema){
 		this.schema = schema;
 		this.values = new Object[schema.fields().length];
-		if(! schema.isVariableSize()){
+		if(!schema.isVariableSize()){
 			// This only happens once
 			this.fixedSchemaSize = this.calculateSizeFromSchema();
 		}
@@ -28,7 +28,7 @@ public class OTuple {
 	
 	public static byte[] create(Schema schema, String[] fields, Object[] vs) {
 		OTuple o = new OTuple(schema);
-		if(fields.length != vs.length){
+		/*if(fields.length != vs.length){
 			throw new SchemaException("Mismatch between fieldNames and values");
 		}
 		if(fields.length != schema.fields().length){
@@ -44,8 +44,8 @@ public class OTuple {
 			else{
 				values[i] = toTypeCheck;
 			}
-		}
-		o.values = values;
+		}*/
+		o.values = vs;
 		return o.getBytes();
 	}
 	
@@ -68,21 +68,32 @@ public class OTuple {
 		int requiredSize = this.fixedSchemaSize;
 		if(schema.isVariableSize()){
 			requiredSize = calculateSizeFromSchema(); 
+			//requiredSize = 30;
 		}
 		data = new byte[requiredSize];
-		ByteBuffer wrapper = ByteBuffer.wrap(data);
+		//ByteBuffer wrapper = ByteBuffer.wrap(data);
+		int pos = 0;
 		for(int i = 0; i < values.length; i++){
 			Type t = schema.fields()[i];
-			t.write(wrapper, values[i]);
+			pos = t.write(data,values[i],pos);
 		}
 		return data;
 	}
 	
+	
 	private int calculateSizeFromSchema(){
 		int size = 0;
-		for(int i = 0; i < schema.fields().length; i++){
-			Type t = schema.fields()[i];
-			size = size + t.sizeOf(values[i]);
+		char[] d = schema.denote;
+		for(int i = 0; i < d.length; i++){
+			//Type t = schema.fields()[i];
+			//size += t.sizeOf(values[i]);
+			char c = d[i];
+			if(c=='5'){
+				size = size + 4 + ((String)values[i]).length();
+			}
+			else {// Default for if not string type, then INT size.
+				size = size + 4;
+			}
 		}
 		return size;
 	}

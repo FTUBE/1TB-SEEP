@@ -219,8 +219,7 @@ public class NetworkSelector implements EventAPI {
 					Set<SelectionKey> selectedKeys = acceptorSelector.selectedKeys();
 					Iterator<SelectionKey> keyIt = selectedKeys.iterator();
 					while(keyIt.hasNext()){
-						SelectionKey key = keyIt.next();
-						
+						SelectionKey key = keyIt.next();	
 						// accept events
 						if(key.isAcceptable()){
 							// Accept connection and assign in a round robin fashion to readers
@@ -234,8 +233,7 @@ public class NetworkSelector implements EventAPI {
 							System.exit(0);
 						}
 					}
-					keyIt.remove();
-					
+					keyIt.remove();				
 				}
 				catch(IOException e){
 					e.printStackTrace();
@@ -367,6 +365,8 @@ public class NetworkSelector implements EventAPI {
 				try{
 					incomingCon.configureBlocking(false);
 					incomingCon.socket().setTcpNoDelay(true);
+					//incomingCon.socket().setSendBufferSize(50);
+					//incomingCon.socket().setReceiveBufferSize(50);
 					// register new incoming connection in the thread-local selector
 					SelectionKey key = incomingCon.register(readSelector, SelectionKey.OP_READ);
 					// We attach the inputAdapterProvider Map, so that we can identify the channel once it starts
@@ -542,7 +542,8 @@ public class NetworkSelector implements EventAPI {
 					InetSocketAddress address = c.getInetSocketAddressForData();
 			        Socket socket = channel.socket();
 			        socket.setKeepAlive(true); // Unlikely in non-production scenarios we'll be up for more than 2 hours but...
-			        socket.setTcpNoDelay(true); // Disabling Nagle's algorithm
+			        socket.setTcpNoDelay(true); 
+			        //socket.setSendBufferSize(50);// Disabling Nagle's algorithm
 			        try {
 			        	channel.configureBlocking(false);
 			            channel.connect(address);

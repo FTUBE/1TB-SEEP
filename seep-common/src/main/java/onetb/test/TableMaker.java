@@ -9,15 +9,15 @@ import java.io.OutputStreamWriter;
 
 public class TableMaker {
 	public static void main(String[] args) throws IOException{
-		String path = "/Users/tianyang/EFile/t1.csv";
+		String path = "/Users/tianyang/EFile/t2.csv";
 		File f = new File(path);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-		int line = 5000000;
-		int range = 50;
-		String[] u_set = new String[]{"monoko","tobiko","raiko","sueko","gekiko"};
+		int line = 80000000;
+		int range = 10;
+		String[] u_set = new String[]{"1","0","0","0","0","0","0","0","0","0","0","0","5"};
 		String[] p_set = new String[]{"taiyou","knife","jinsei","syougakusei","origami"};
-		bw.write("id,user,product");
-		bw.newLine();
+		//bw.write("id,user,product");
+		//bw.newLine();
 		double start = System.currentTimeMillis();
 		for(int i = 0;i<line;i++){
 			int id = (int) (Math.random()*range);

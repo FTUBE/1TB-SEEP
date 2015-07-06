@@ -12,6 +12,9 @@ import uk.ac.imperial.lsds.seep.api.API;
 import uk.ac.imperial.lsds.seep.api.SeepTask;
 import uk.ac.imperial.lsds.seep.api.data.DataItem;
 import uk.ac.imperial.lsds.seep.api.data.ITuple;
+import uk.ac.imperial.lsds.seep.api.data.Schema;
+import uk.ac.imperial.lsds.seep.api.data.Type;
+import uk.ac.imperial.lsds.seep.api.data.Schema.SchemaBuilder;
 import uk.ac.imperial.lsds.seep.api.state.SeepState;
 import uk.ac.imperial.lsds.seep.core.InputAdapter;
 import uk.ac.imperial.lsds.seep.core.OutputAdapter;
@@ -119,37 +122,18 @@ public class SingleThreadProcessingEngine implements ProcessingEngine {
 			API api = new Collector(id, outputAdapters);
 			int pointer = 0;
 			int ia_len = inputAdapters.size();
+			int count = 0;
 			while(working) {
 				while(pointer<ia_len){
 					InputAdapter ia = inputAdapters.get(pointer);
 					pointer++;
-						DataItem di = ia.pullDataItem(MAX_BLOCKING_TIME_PER_INPUTADAPTER_MS);
-						if(di != null){
-							//boolean consume = true;
-							//while(consume) {
-								ITuple d = di.consume();
-								//ITuple d = (ITuple) di;
-								//if(d != null) {
-									task.processData(d, api);									
-									/*if(!set){
-										start = System.currentTimeMillis();
-										set = true;
-									}*/
-									/*count++;
-									byte[] d = OTuple.create(schema, new String[]{"id", "user"}, new Object[]{1, "1010101010"});
-									if(count % 500000 == 0){
-										double totalsize = count*16;
-										double end = System.currentTimeMillis();
-										double time = (end-start)/1000;
-										System.out.println((totalsize/time)/1000000+"MB/s");
-									}*/
-									//m.mark();
-								//} else consume = false;
-							//}
-						}
+					DataItem di = ia.pullDataItem(MAX_BLOCKING_TIME_PER_INPUTADAPTER_MS);
+					if(di != null){
+						ITuple d = di.consume();
+						task.processData(d, api);									
+					}
 					if(!(pointer<ia_len) && working){
 						pointer = 0;
-						//it = inputAdapters.iterator();
 					}
 				}
 				// If there are no input adapters, assume processData contain all necessary and give null input data

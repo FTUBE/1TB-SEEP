@@ -1,7 +1,9 @@
 package uk.ac.imperial.lsds.seepmaster.query;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -166,11 +168,54 @@ public class QueryManager {
 	
 	private PhysicalSeepQuery createOriginalPhysicalQuery(){
 		Set<SeepQueryPhysicalOperator> physicalOperators = new HashSet<>();
-		
+		boolean manual = true;
+		String judge=null;
+		try {
+			judge= getUserInput("Manual or not?(y or n)");
+			if(judge.compareTo("n")==0){
+				manual = false;
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// use pre-defined description if exists
 		if(this.opToEndpointMapping != null){
 			for(Entry<Integer, EndPoint> e : opToEndpointMapping.entrySet()){
 				// TODO: implement manual mapping from the description
+			}
+		}
+		else if(manual){
+			for(Operator lso : lsq.getAllOperators()){
+				String ip=null;
+				String port=null;
+				inf.iterall();
+				try {
+					ip = getUserInput("Class: "+lso.getSeepTask().getClass().getName()+"\nWhich ip?");
+					port = getUserInput("Port?");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ExecutionUnit eu =inf.seacrhND(ip,port);
+				while(eu==null){
+				System.out.println("Not found!\n");
+				inf.iterall();
+				try {
+					ip = getUserInput("Class: "+lso.getSeepTask().getClass().getName()+"\nWhich ip?");
+					port = getUserInput("Port?");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				eu =inf.seacrhND(ip,port);
+				}
+				EndPoint ep = eu.getEndPoint();
+				SeepQueryPhysicalOperator po = SeepQueryPhysicalOperator.createPhysicalOperatorFromLogicalOperatorAndEndPoint(lso, ep);
+				int pOpId = po.getOperatorId();
+				LOG.debug("LogicalOperator: {} will run on: {} -> ({})", pOpId, po.getWrappingEndPoint().getId(), po.getWrappingEndPoint().getIp().toString());
+				//opToEndpointMapping.put(pOpId, po.getWrappingEndPoint());
+				physicalOperators.add(po);
 			}
 		}
 		// otherwise map to random workers
@@ -191,6 +236,12 @@ public class QueryManager {
 		return psq;
 	}
 	
+	private String getUserInput(String msg) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println(msg);
+		String option = br.readLine();
+		return option;
+	}
 	private int computeRequiredExecutionUnits(LogicalSeepQuery lsq){
 		return lsq.getAllOperators().size();
 	}

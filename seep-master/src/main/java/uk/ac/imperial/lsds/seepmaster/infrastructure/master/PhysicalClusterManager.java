@@ -1,6 +1,7 @@
 package uk.ac.imperial.lsds.seepmaster.infrastructure.master;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.imperial.lsds.seep.comm.Connection;
 import uk.ac.imperial.lsds.seep.infrastructure.ExecutionUnitType;
+import uk.ac.imperial.lsds.seep.util.Utils;
 
 public class PhysicalClusterManager implements InfrastructureManager {
 	
@@ -37,7 +39,11 @@ public class PhysicalClusterManager implements InfrastructureManager {
 		physicalNodes.push(eu);
 		connectionsToPhysicalNodes.put(eu.getId(), new Connection(eu.getEndPoint()));
 	}
-	
+	public void iterall(){
+		for(ExecutionUnit eu: physicalNodes){
+			System.out.println(eu.getEndPoint().getIp().getHostAddress()+":"+eu.getEndPoint().getPort());
+		}
+	}
 	@Override
 	public ExecutionUnit getExecutionUnit(){
 		if(physicalNodes.size() > 0){
@@ -100,6 +106,30 @@ public class PhysicalClusterManager implements InfrastructureManager {
 	@Override
 	public Connection getConnectionTo(int executionUnitId) {
 		return connectionsToPhysicalNodes.get(executionUnitId);
+	}
+
+	@Override
+	public ExecutionUnit seacrhND(String ip, String port) {
+		int id = -1;
+		try {
+			id = Utils.computeIdFromIpAndPort(InetAddress.getByName(ip), Integer.valueOf(port));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ExecutionUnit eu = null;
+		for(ExecutionUnit e : physicalNodes){
+			if(e.getId() == id){
+				System.out.println("Found!");
+				eu = e;
+				physicalNodes.remove(e);
+			}
+		}
+		
+		return eu;
 	}
 
 }

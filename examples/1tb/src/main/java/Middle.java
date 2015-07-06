@@ -9,11 +9,27 @@ import uk.ac.imperial.lsds.seep.api.data.Schema.SchemaBuilder;
 
 public class Middle implements SeepTask {
 
-	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.STRING, "user").build();
-
+	private int count = 0;
+	private boolean set = false;
+	private double start = 0;
 	@Override
 	public void processData(ITuple data, API api) {
-		
+		if(!set){
+			start = System.currentTimeMillis();
+			set = true;
+		}
+		count++;
+		int id = data.getInt("id");
+		int score = data.getInt("score");
+		//System.out.println("userid:"+id+"got: "+score);
+		//String user = data.getString("user");
+		//System.out.println(id+","+user);
+		if(count % 500000==0){
+			double totalsize = count*data.getData().length;
+			double end = System.currentTimeMillis();
+			double time = (end-start)/1000;
+			System.out.println((totalsize/time)/1000000+"MB/s");
+		}
 	}
 	
 	private void waitHere(int time){

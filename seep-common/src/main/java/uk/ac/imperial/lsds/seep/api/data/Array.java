@@ -52,4 +52,10 @@ public class Array extends Type {
 		return type.isVariableSize();
 	}
 
+	@Override
+	public int write(byte[] buf, Object o, int pos) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

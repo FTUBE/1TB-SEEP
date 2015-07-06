@@ -13,12 +13,14 @@ public interface InfrastructureManager {
 	public ExecutionUnit getExecutionUnit();
 	public boolean removeExecutionUnit(int id);
 	public int executionUnitsAvailable();
-	
+	public void iterall();
 	public void claimExecutionUnits(int numExecutionUnits);
 	public void decommisionExecutionUnits(int numExecutionUnits);
 	public void decommisionExecutionUnit(ExecutionUnit node);
 	
 	public Set<Connection> getConnectionsTo(Set<Integer> executionUnitIds);
 	public Connection getConnectionTo(int executionUnitId);
+
+	public ExecutionUnit seacrhND(String ip, String port);
 	
 }
