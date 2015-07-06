@@ -6,12 +6,16 @@ import uk.ac.imperial.lsds.seep.api.data.Schema;
 import uk.ac.imperial.lsds.seep.api.data.Type;
 import uk.ac.imperial.lsds.seep.api.data.Schema.SchemaBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Middle implements SeepTask {
 
 	private int count = 0;
 	private boolean set = false;
-	private double start = 0;
+	private long start = 0;
+	Map<Integer,Integer> id_map = new HashMap<Integer,Integer>();
 	@Override
 	public void processData(ITuple data, API api) {
 		if(!set){
@@ -21,15 +25,22 @@ public class Middle implements SeepTask {
 		count++;
 		int id = data.getInt("id");
 		int score = data.getInt("score");
-		//System.out.println("userid:"+id+"got: "+score);
+		if(id_map.containsKey(id)){
+			int total = id_map.remove(id)+score;
+			System.out.println("id:"+id+" in total: "+total);
+		}
+		else{
+			id_map.put(id, score);
+		}
+
 		//String user = data.getString("user");
 		//System.out.println(id+","+user);
-		if(count % 500000==0){
-			double totalsize = count*data.getData().length;
-			double end = System.currentTimeMillis();
-			double time = (end-start)/1000;
+		/*if(count % 500000==0){
+			long totalsize = count*data.getData().length;
+			long end = System.currentTimeMillis();
+			float time = (end-start)/1000;
 			System.out.println((totalsize/time)/1000000+"MB/s");
-		}
+		}*/
 	}
 	
 	private void waitHere(int time){
