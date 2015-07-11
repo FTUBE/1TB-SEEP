@@ -14,8 +14,9 @@ public class Middle implements SeepTask {
 
 	private int count = 0;
 	private boolean set = false;
-	private long start = 0;
+	private float start = 0;
 	Map<Integer,Integer> id_map = new HashMap<Integer,Integer>();
+	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 	@Override
 	public void processData(ITuple data, API api) {
 		if(!set){
@@ -27,7 +28,11 @@ public class Middle implements SeepTask {
 		int score = data.getInt("score");
 		if(id_map.containsKey(id)){
 			int total = id_map.remove(id)+score;
-			System.out.println("id:"+id+" in total: "+total);
+			byte[] d = OTuple.create(schema, new String[]{"id","score"}, new Object[]{id,total});
+			//float end = System.currentTimeMillis();
+			//float time = (end-start)/1000;
+			//System.out.println(time);
+			api.send(d);
 		}
 		else{
 			id_map.put(id, score);

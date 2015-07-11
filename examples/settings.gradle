@@ -10,4 +10,5 @@ include \
 	"simple-kafka-stateless-pipeline",
 	"simple-hdfs-stateless-query",
 	"MRex",
-	"1tb"
+	"1tb",
+	"1tbsimple"

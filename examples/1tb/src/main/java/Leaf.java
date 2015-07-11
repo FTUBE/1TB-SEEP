@@ -11,7 +11,7 @@ public class Leaf implements SeepTask {
 	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 	int count = 0;
 	boolean set = false;
-	long start = 0;
+	double start = 0;
 	int cur;
 	int cur_sum=0;
 	//byte[] eternald = new byte[]{0, 0, 0, 42, 0, 0, 0, 6, 116, 111, 98, 105, 107, 111};
@@ -33,9 +33,9 @@ public class Leaf implements SeepTask {
 		byte[] d = OTuple.create(schema, new String[]{"id","score"}, new Object[]{cur,cur_sum});
 		//System.out.println("Send "+cur+" "+cur_sum);
 		api.send(d);
-		long end = System.currentTimeMillis();
-		double time = (end-start)/1000;
-		System.out.println(time);
+		double end = System.currentTimeMillis();
+		float time = (float)((end-start)/1000);
+		System.out.println(time+"second"+cur);
 		int next = line.indexOf(',', i+1);
 		cur_sum=Integer.valueOf(line.substring(i+1,next));
 		cur=now;
@@ -45,13 +45,13 @@ public class Leaf implements SeepTask {
 			cur_sum+=Integer.valueOf(line.substring(i+1,next));
 		}
 		count++;
-		/*if(count % 500000 == 0){
+		if(count % 500000 == 0){
 			long totalsize = count*line.getBytes().length;
-			long end = System.currentTimeMillis();
-			float time = (end-start)/1000;
+			double end = System.currentTimeMillis();
+			float time = (float)((end-start)/1000);
 			System.out.println((totalsize/time)/1000000);
 			//System.out.println(d.length);
-		}*/
+		}
 		//waitHere(10);
 	}
 	
