@@ -9,6 +9,7 @@ public class Sink implements SeepTask {
 	public void processData(ITuple data, API api) {
 	}
 
+	@Override
 	public void processDataGroup(ITuple dataBatch, API api) {
 		// TODO Auto-generated method stub
 	}
