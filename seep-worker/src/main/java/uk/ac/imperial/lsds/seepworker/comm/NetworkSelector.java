@@ -77,6 +77,9 @@ public class NetworkSelector implements EventAPI {
 		LOG.info("Configuring NetworkSelector with: {} readers, {} workers and {} maxPendingNetworkConn",
 				numReaderWorkers, numWriterWorkers, totalNumberPendingConnectionsPerThread);
 		// Create pool of reader threads
+		if(this.numUpstreamConnections==0){
+			numReaderWorkers=0;
+		}
 		readers = new Reader[numReaderWorkers];
 		readerWorkers = new Thread[numReaderWorkers];
 		for(int i = 0; i < numReaderWorkers; i++){
@@ -474,7 +477,6 @@ public class NetworkSelector implements EventAPI {
 						if(key.isWritable()){
 							OutputBuffer ob = (OutputBuffer)key.attachment();
 							SocketChannel channel = (SocketChannel)key.channel();
-							
 							if(needsConfigureOutputConnection.get(ob.id())){
 								handleSendIdentifier(myId, channel);
 								unsetWritable(key);
@@ -542,7 +544,7 @@ public class NetworkSelector implements EventAPI {
 					InetSocketAddress address = c.getInetSocketAddressForData();
 			        Socket socket = channel.socket();
 			        socket.setKeepAlive(true); // Unlikely in non-production scenarios we'll be up for more than 2 hours but...
-			        socket.setTcpNoDelay(true); 
+			        socket.setTcpNoDelay(true);
 			        //socket.setSendBufferSize(50);// Disabling Nagle's algorithm
 			        try {
 			        	channel.configureBlocking(false);

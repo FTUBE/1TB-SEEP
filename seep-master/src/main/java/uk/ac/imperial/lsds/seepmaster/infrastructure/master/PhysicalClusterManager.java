@@ -124,8 +124,9 @@ public class PhysicalClusterManager implements InfrastructureManager {
 		for(ExecutionUnit e : physicalNodes){
 			if(e.getId() == id){
 				System.out.println("Found!");
-				eu = e;
+				eu = e;				
 				physicalNodes.remove(e);
+				break;
 			}
 		}
 		

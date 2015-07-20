@@ -191,7 +191,7 @@ public class QueryManager {
 				String port=null;
 				inf.iterall();
 				try {
-					ip = getUserInput("Class: "+lso.getSeepTask().getClass().getName()+"\nWhich ip?");
+					ip = getUserInput("Class: "+lso.getSeepTask().getClass().getName()+" Id: "+lso.getOperatorId()+"\nWhich ip?");
 					port = getUserInput("Port?");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

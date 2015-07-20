@@ -16,6 +16,7 @@ public class Top implements SeepTask {
 	private boolean set = false;
 	private long start = 0;
 	Map<Integer,Integer> id_map = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> id_times = new HashMap<Integer,Integer>();
 	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 	@Override
 	public void processData(ITuple data, API api) {

@@ -44,14 +44,14 @@ public class Rcv {
 			}
 		}
 		readC.socket().setTcpNoDelay(true);
-        readC.socket().setKeepAlive(false);
-		//readC.configureBlocking(false);
-		byte[] readbuf = new byte[200000];
-		//ByteBuffer buf = ByteBuffer.allocate(50);
-		InputStream is = readC.socket().getInputStream();
+        readC.socket().setKeepAlive(true);
+		readC.configureBlocking(true);
+		ByteBuffer buf = ByteBuffer.allocate(20);
+		SocketChannel is = readC.socket().getChannel();
 		int count=0;
 		while(true){
-			int i = IOUtils.read(is, readbuf);
+			buf.clear();
+			int i = is.read(buf);
 			if(!(i>0)){
 				continue;
 			}

@@ -17,19 +17,19 @@ public class Base implements QueryComposer {
 		
 		Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 		
-		/*Properties p1 = new Properties();
+		Properties p1 = new Properties();
 		p1.setProperty(FileConfig.FILE_PATH, "/Users/tianyang/EFile/t1.csv");
 		
 		Properties p2 = new Properties();
-		p2.setProperty(FileConfig.FILE_PATH, "/Users/tianyang/EFile/t2.csv");*/
+		p2.setProperty(FileConfig.FILE_PATH, "/Users/tianyang/EFile/t2.csv");
 		//Clear below
-		Properties p1 = new Properties();
+		/*Properties p1 = new Properties();
 		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
 		
 		Properties p2 = new Properties();
-		p2.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t2.csv");
-		
-		/*Properties p3 = new Properties();
+		p2.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t2.csv");*/
+		/*
+		Properties p3 = new Properties();
 		p3.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t3.csv");
 		
 		Properties p4 = new Properties();
@@ -58,11 +58,11 @@ public class Base implements QueryComposer {
 		leaf2.connectTo(top, 3, schema);
 		
 		/*src3.connectTo(leaf3, 4, schema);
-		leaf3.connectTo(middle2, 5, schema);
+		leaf3.connectTo(top, 5, schema);
 		src4.connectTo(leaf4, 6, schema);
-		leaf4.connectTo(middle2, 7, schema);
+		leaf4.connectTo(top, 7, schema);*/
 		
-		middle1.connectTo(top, 8, schema);
+		/*middle1.connectTo(top, 8, schema);
 		middle2.connectTo(top, 9, schema);*/
 		
 		top.connectTo(snk, 10, schema);

@@ -16,6 +16,7 @@ public class Middle implements SeepTask {
 	private boolean set = false;
 	private float start = 0;
 	Map<Integer,Integer> id_map = new HashMap<Integer,Integer>();
+	Map<Integer,Integer> id_times = new HashMap<Integer,Integer>();
 	private Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 	@Override
 	public void processData(ITuple data, API api) {
@@ -37,6 +38,7 @@ public class Middle implements SeepTask {
 		else{
 			id_map.put(id, score);
 		}
+
 
 		//String user = data.getString("user");
 		//System.out.println(id+","+user);

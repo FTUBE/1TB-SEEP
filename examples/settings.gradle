@@ -11,4 +11,5 @@ include \
 	"simple-hdfs-stateless-query",
 	"MRex",
 	"1tb",
-	"1tbsimple"
+	"1tbsimple",
+	"1tblevel4"

@@ -12,9 +12,10 @@ import java.io.OutputStreamWriter;
 
 public class getridMB {
 	public static void main(String[] args) throws IOException{
-		File f = new File("/Users/tianyang/Downloads/Testdata/WithMiddleLevel3/Case2/Leaf4");
+		String url_part = "/Users/tianyang/Downloads/Level3/c0/Leaf4";
+		File f = new File(url_part);
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-		File fw = new File("/Users/tianyang/Downloads/Testdata/WithMiddleLevel3/Case2/speed4");
+		File fw = new File(url_part+"-processed");
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fw)));
 		String line = br.readLine();
 		while(line!=null){
