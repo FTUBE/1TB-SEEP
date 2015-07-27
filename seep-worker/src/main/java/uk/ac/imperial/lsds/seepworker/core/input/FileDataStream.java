@@ -32,7 +32,7 @@ public class FileDataStream implements InputAdapter {
 	
 	private BufferedReader br;
 	private int count = 0;
-	private int size = 0;
+	private int n = 0;
 	private String read = null;
 	
 	public FileDataStream(WorkerConfig wc, int opId, int streamId, Schema expectedSchema){
@@ -104,13 +104,22 @@ public class FileDataStream implements InputAdapter {
 
 	@Override
 	public ITuple pullDataItem(int timeout) {
-		if(count<size){
+		if(n==801){
+			//System.out.println("Total: "+count);
+			return null;
+		}
+		if(count%100000==0){
+			read = n+",0,syougakusei";
+			n++;
+		}
+		count++;
+		/*if(count<size){
 			read = mem.get(count);
 			count++;
 		}
 		else{
 			return null;
-		}
+		}*/
 		iTuple.setRawData(read);
 		iTuple.setStreamId(streamId);
 		return iTuple;
@@ -124,7 +133,7 @@ public class FileDataStream implements InputAdapter {
 	
 	public void availablemem(ArrayList<String> _mem){
 		this.mem=_mem;
-		this.size = mem.size();
+		//this.size = mem.size();
 	}
 	public void availablebr(BufferedReader br) {
 		this.br=br;

@@ -14,7 +14,7 @@ public class TableMaker {
 		String path = "/Users/tianyang/EFile/t1.csv";
 		File f = new File(path);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-		int line = 3000000;
+		int line = 20000000;
 		int range = 100;
 		String[] u_set = new String[]{"1","0","0","0","0","0","0","0","0","0","0","5","0"};
 		String[] p_set = new String[]{"taiyou","knife","jinsei","syougakusei","origami"};
