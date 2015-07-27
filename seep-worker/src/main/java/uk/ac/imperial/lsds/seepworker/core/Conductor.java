@@ -126,6 +126,7 @@ public class Conductor {
 			if(ns == null) ns = new NetworkSelector(wc, o.getOperatorId(), coreInput.getInputAdapterProvider());
 			Set<OutputBuffer> obufs = coreOutput.getOutputBuffers();
 			ns.configureConnect(obufs);
+			System.out.println(obufs.iterator().next().getConnection().getInetSocketAddress().getAddress().getHostAddress());
 		}
 		return ns;
 	}

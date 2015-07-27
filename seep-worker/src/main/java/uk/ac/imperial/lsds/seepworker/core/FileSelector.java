@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -87,7 +88,16 @@ public class FileSelector {
 				LOG.info("Created URI to local resource: {}", file.toString());
 				BufferedReader br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				FileDataStream fs = (FileDataStream)dataAdapters.get(e.getKey());
-				fs.availablebr(br);
+				System.out.println("Loading file"+file.toString()+"............");
+				ArrayList<String> mem = new ArrayList<String>();
+				String read = br.readLine();
+				while(read!=null){
+					mem.add(read);
+					read = br.readLine();
+				}
+				System.out.println("Finish loading file"+file.toString()+"\nSize:"+mem.size());
+				fs.availablemem(mem);
+				//fs.availablebr(br);
 			} 
 			catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();

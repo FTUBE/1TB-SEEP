@@ -28,8 +28,12 @@ public class FileDataStream implements InputAdapter {
 	private InputBuffer buffer;
 	private BlockingQueue<byte[]> queue;
 	private int queueSize;
+	private ArrayList<String> mem;
 	
 	private BufferedReader br;
+	private int count = 0;
+	private int size = 0;
+	private String read = null;
 	
 	public FileDataStream(WorkerConfig wc, int opId, int streamId, Schema expectedSchema){
 		this.streamId = streamId;
@@ -100,15 +104,11 @@ public class FileDataStream implements InputAdapter {
 
 	@Override
 	public ITuple pullDataItem(int timeout) {
-		String read=null;
-		//read = "hfuewhfuiwehf";
-		try {
-			read = br.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			}
-		if(read == null){
+		if(count<size){
+			read = mem.get(count);
+			count++;
+		}
+		else{
 			return null;
 		}
 		iTuple.setRawData(read);
@@ -121,7 +121,11 @@ public class FileDataStream implements InputAdapter {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	public void availablemem(ArrayList<String> _mem){
+		this.mem=_mem;
+		this.size = mem.size();
+	}
 	public void availablebr(BufferedReader br) {
 		this.br=br;
 	}

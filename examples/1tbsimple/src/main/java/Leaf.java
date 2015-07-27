@@ -50,7 +50,6 @@ public class Leaf implements SeepTask {
 			double end = System.currentTimeMillis();
 			float time = (float)((end-start)/1000);
 			System.out.println((totalsize/time)/1000000);
-			//System.out.println(d.length);
 		}
 		//waitHere(10);
 	}

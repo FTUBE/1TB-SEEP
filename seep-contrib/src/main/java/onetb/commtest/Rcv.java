@@ -55,15 +55,15 @@ public class Rcv {
 			if(!(i>0)){
 				continue;
 			}
-			System.out.println(count);
+			//System.out.println(count);
 			//System.out.println(buf.remaining());
-        	/*if(count % 50000==0){
+        	if(count % 50000==0){
     			double totalsize = count;
     			double end = System.currentTimeMillis();
-    			double time = (end-start)/1000;
-    			System.out.println("Reader:"+(totalsize/time)/1000000+"MHZ");
+    			//double time = (end-start)/1000;
+    			//System.out.println("Reader:"+(totalsize/time)/1000000+"MHZ");
     			
-        	}*/
+        	}
         	count++;
 		}
 	}
