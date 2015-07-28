@@ -14,7 +14,7 @@ public class TableMaker {
 		String path = "/Users/tianyang/EFile/t1.csv";
 		File f = new File(path);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-		int line = 20000000;
+		int line = 80000000;
 		int range = 100;
 		String[] u_set = new String[]{"1","0","0","0","0","0","0","0","0","0","0","5","0"};
 		String[] p_set = new String[]{"taiyou","knife","jinsei","syougakusei","origami"};
@@ -25,7 +25,10 @@ public class TableMaker {
 			for(int i = 0;i<line/range;i++){
 				int u_choose = (int) (Math.random()*(u_set.length-1));
 				int p_choose = (int) (Math.random()*(p_set.length-1));
-				bw.write(n+","+u_set[u_choose]+","+p_set[p_choose]);
+				String writeline = n+","+u_set[u_choose]+","+p_set[p_choose];
+				byte count = (byte) writeline.length();
+				//bw.
+				bw.write(writeline);
 				bw.newLine();
 			}
 		}

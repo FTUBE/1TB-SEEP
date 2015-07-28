@@ -17,18 +17,6 @@ public class Base implements QueryComposer {
 		
 		Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 		
-		/*Properties p1 = new Properties();
-		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
-		
-		Properties p2 = new Properties();
-		p2.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t2.csv");
-		
-		Properties p3 = new Properties();
-		p3.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t3.csv");
-		
-		Properties p4 = new Properties();
-		p4.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t4.csv");*/
-		
 		Properties p1 = new Properties();
 		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
 		
@@ -40,6 +28,18 @@ public class Base implements QueryComposer {
 		
 		Properties p4 = new Properties();
 		p4.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t4.csv");
+		/*
+		Properties p1 = new Properties();
+		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
+		
+		Properties p2 = new Properties();
+		p2.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t2.csv");
+		
+		Properties p3 = new Properties();
+		p3.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t3.csv");
+		
+		Properties p4 = new Properties();
+		p4.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t4.csv");*/
 		FileSource src1 = FileSource.newSource(0, p1);
 		LogicalOperator leaf1 = queryAPI.newStatelessOperator(new Leaf(), 1);
 		FileSource src2 = FileSource.newSource(0, p2);

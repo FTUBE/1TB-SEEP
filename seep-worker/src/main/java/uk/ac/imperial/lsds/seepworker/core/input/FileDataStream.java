@@ -104,22 +104,15 @@ public class FileDataStream implements InputAdapter {
 
 	@Override
 	public ITuple pullDataItem(int timeout) {
-		if(n==801){
-			//System.out.println("Total: "+count);
+		try {
+			read = br.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(read==null){
 			return null;
 		}
-		if(count%100000==0){
-			read = n+",0,syougakusei";
-			n++;
-		}
-		count++;
-		/*if(count<size){
-			read = mem.get(count);
-			count++;
-		}
-		else{
-			return null;
-		}*/
 		iTuple.setRawData(read);
 		iTuple.setStreamId(streamId);
 		return iTuple;

@@ -88,16 +88,19 @@ public class FileSelector {
 				LOG.info("Created URI to local resource: {}", file.toString());
 				BufferedReader br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				FileDataStream fs = (FileDataStream)dataAdapters.get(e.getKey());
-				/*System.out.println("Loading file"+file.toString()+"............");
-				ArrayList<String> mem = new ArrayList<String>();
+				System.out.println("Loading file"+file.toString()+"............");
+				while(br.readLine()!=null){	
+				}
+				System.out.println("Finish Loading....."+file.toString()+"............");
+				/*ArrayList<String> mem = new ArrayList<String>();
 				String read = br.readLine();
 				while(read!=null){
 					mem.add(read);
 					read = br.readLine();
 				}
 				System.out.println("Finish loading file"+file.toString()+"\nSize:"+mem.size());
-				fs.availablemem(mem);
-				//fs.availablebr(br);*/
+				fs.availablemem(mem);*/
+				fs.availablebr(br);
 			} 
 			catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();

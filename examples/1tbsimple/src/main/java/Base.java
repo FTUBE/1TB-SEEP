@@ -18,10 +18,10 @@ public class Base implements QueryComposer {
 		Schema schema = SchemaBuilder.getInstance().newField(Type.INT, "id").newField(Type.INT,"score").build();
 		
 		Properties p1 = new Properties();
-		p1.setProperty(FileConfig.FILE_PATH, "/Users/tianyang/EFile/t1.csv");
+		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
 		
 		Properties p2 = new Properties();
-		p2.setProperty(FileConfig.FILE_PATH, "/Users/tianyang/EFile/t2.csv");
+		p2.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t2.csv");
 		//Clear below
 		/*Properties p1 = new Properties();
 		p1.setProperty(FileConfig.FILE_PATH, "/homes/ty1214/t1.csv");
