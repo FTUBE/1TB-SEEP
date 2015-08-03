@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class TableMaker {
 	public static void main(String[] args) throws IOException{
-		String path = "/Users/tianyang/EFile/t1.csv";
+		String path = "/Users/tianyang/EFile/t4.csv";
 		File f = new File(path);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-		int line = 80000000;
-		int range = 100;
+		int line = 20000000;
+		int range = 1000000;
 		String[] u_set = new String[]{"1","0","0","0","0","0","0","0","0","0","0","5","0"};
 		String[] p_set = new String[]{"taiyou","knife","jinsei","syougakusei","origami"};
 		//bw.write("id,user,product");

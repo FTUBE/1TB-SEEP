@@ -92,6 +92,8 @@ public class FileSelector {
 				while(br.readLine()!=null){	
 				}
 				System.out.println("Finish Loading....."+file.toString()+"............");
+				br=null;
+				BufferedReader newbr= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				/*ArrayList<String> mem = new ArrayList<String>();
 				String read = br.readLine();
 				while(read!=null){
@@ -100,7 +102,7 @@ public class FileSelector {
 				}
 				System.out.println("Finish loading file"+file.toString()+"\nSize:"+mem.size());
 				fs.availablemem(mem);*/
-				fs.availablebr(br);
+				fs.availablebr(newbr);
 			} 
 			catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();

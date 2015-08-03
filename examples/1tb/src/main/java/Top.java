@@ -28,7 +28,8 @@ public class Top implements SeepTask {
 		int score = data.getInt("score");
 		if(id_map.containsKey(id)){
 			int total = id_map.remove(id)+score;
-			System.out.println("id:"+id+" total:"+total);
+			if(id%500==0)
+				System.out.println("id:"+id+" total:"+total);
 		}
 		else{
 			id_map.put(id, score);

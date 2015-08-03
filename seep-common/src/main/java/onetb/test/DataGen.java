@@ -14,7 +14,7 @@ public class DataGen {
 		String path = "/Users/tianyang/EFile/Data";
 		File f = new File(path);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-		int line = 100;
+		int line = 5000;
 		//int range = 100;
 		//bw.write("id,user,product");
 		//bw.newLine();

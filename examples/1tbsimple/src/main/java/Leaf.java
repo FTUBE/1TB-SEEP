@@ -31,11 +31,11 @@ public class Leaf implements SeepTask {
 		int now = Integer.valueOf(line.substring(0,i));
 		if(now!=cur){
 		byte[] d = OTuple.create(schema, new String[]{"id","score"}, new Object[]{cur,cur_sum});
-		//System.out.println("Send "+cur+" "+cur_sum);
 		api.send(d);
 		double end = System.currentTimeMillis();
 		float time = (float)((end-start)/1000);
-		System.out.println(time+"second"+cur);
+		count+=d.length;
+		System.out.println(time+" s "+cur+" N "+((count/time)/1000000)+"MBps");
 		int next = line.indexOf(',', i+1);
 		cur_sum=Integer.valueOf(line.substring(i+1,next));
 		cur=now;
@@ -44,13 +44,7 @@ public class Leaf implements SeepTask {
 			int next = line.indexOf(',', i+1);
 			cur_sum+=Integer.valueOf(line.substring(i+1,next));
 		}
-		count++;
-		if(count % 500000 == 0){
-			long totalsize = count*line.getBytes().length;
-			double end = System.currentTimeMillis();
-			float time = (float)((end-start)/1000);
-			System.out.println((totalsize/time)/1000000);
-		}
+		//System.out.println("Print");
 		//waitHere(10);
 	}
 	
