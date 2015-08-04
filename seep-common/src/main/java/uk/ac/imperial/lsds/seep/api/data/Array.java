@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 
 public class Array extends Type {
-
 	private final Type type;
 
     public Array(Type type) {
@@ -50,6 +49,12 @@ public class Array extends Type {
 	@Override
 	public boolean isVariableSize() {
 		return type.isVariableSize();
+	}
+
+	@Override
+	public int write(byte[] buf, Object o, int pos) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

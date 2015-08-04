@@ -4,13 +4,14 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public abstract class Type {
-	public final static int SIZE_OVERHEAD = Integer.BYTES;
+public final static int SIZE_OVERHEAD = Integer.BYTES;
 	
 	public abstract String toString();
 	public abstract void write(ByteBuffer buffer, Object o);
 	public abstract Object read(ByteBuffer buffer);
 	public abstract int sizeOf(Object o);
 	public abstract boolean isVariableSize();
+	public abstract int write(byte[] buf, Object o,int pos);
 	
 	public enum JavaType{
 		BYTE, SHORT, INT, LONG, STRING, BYTES
@@ -42,6 +43,12 @@ public abstract class Type {
 		public boolean isVariableSize() {
 			return false;
 		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 		
 	};
 	
@@ -71,6 +78,12 @@ public abstract class Type {
 		public boolean isVariableSize() {
 			return false;
 		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	};
 	
 	public static final Type INT = new Type() {
@@ -98,6 +111,21 @@ public abstract class Type {
 		@Override
 		public boolean isVariableSize() {
 			return false;
+		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			int number = (int)o;
+			byte a = (byte)(number>>>24);
+			byte b = (byte)(number>>>16);
+			byte c = (byte)(number>>>8);
+			byte d = (byte)(number);
+			buf[pos] = a;
+			buf[pos+1] = b;
+			buf[pos+2] = c;
+			buf[pos+3] = d;
+			pos += 4;
+			return pos;
 		}
 	};
 	
@@ -127,6 +155,13 @@ public abstract class Type {
 		@Override
 		public boolean isVariableSize() {
 			return false;
+		}
+
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	};
 	
@@ -167,7 +202,6 @@ public abstract class Type {
             buffer.putInt((int) bytes.length);
             buffer.put(bytes);
 		}
-
 		@Override
 		public int sizeOf(Object o) {
 			return Integer.BYTES + uk.ac.imperial.lsds.seep.util.Utils.utf8Length((String)o);
@@ -176,6 +210,37 @@ public abstract class Type {
 		@Override
 		public boolean isVariableSize() {
 			return true;
+		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			byte[] bytes = null;
+			try {
+				bytes = ((String)o).getBytes("UTF8");
+			} 
+			catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			int length = bytes.length;
+			byte a = (byte)(length>>>24);
+			byte b = (byte)(length>>>16);
+			byte c = (byte)(length>>>8);
+			byte d = (byte)(length);
+			buf[pos] = a;
+			buf[pos+1] = b;
+			buf[pos+2] = c;
+			buf[pos+3] = d;
+			pos += 4;
+			int i=0;
+			while(true){
+				buf[pos+i]= bytes[i];
+				i++;
+				if(!(i<length)){
+					break;
+				}
+			}
+			pos += length;
+			return pos;
 		}
 	};
 	
@@ -208,6 +273,12 @@ public abstract class Type {
 		@Override
 		public boolean isVariableSize() {
 			return false;
+		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 		
 	};
@@ -245,6 +316,12 @@ public abstract class Type {
 		@Override
 		public boolean isVariableSize() {
 			return true;
+		}
+
+		@Override
+		public int write(byte[] buf, Object o, int pos) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	};
 	

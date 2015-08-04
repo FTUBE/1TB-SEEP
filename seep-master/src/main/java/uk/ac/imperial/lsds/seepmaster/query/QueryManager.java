@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -141,11 +142,27 @@ public class QueryManager {
 		}
 		// TODO: take a look at the following two lines. Stateless is good to keep everything lean. Yet consider caching
 		Set<Integer> involvedEUId = originalQuery.getIdOfEUInvolved();
+		Set<Integer> leafIds = new HashSet<>();
+		Iterator<PhysicalOperator> phys = originalQuery.getOperators().iterator();
+		while(phys.hasNext()){
+			PhysicalOperator physo = phys.next();
+			if(physo.getSeepTask().getClass().getName().compareTo("Leaf")==0){
+				int id = physo.getIdOfWrappingExecutionUnit();
+				involvedEUId.remove(id);
+				leafIds.add(id);
+			}
+		}
 		Set<Connection> connections = inf.getConnectionsTo(involvedEUId);
+		Set<Connection> leafconnections = inf.getConnectionsTo(leafIds);
+		System.out.println("normal conn: "+connections.size());
+		System.out.println("leaf conn: "+leafconnections.size());
 		// Send start query command
 		MasterWorkerCommand start = ProtocolCommandFactory.buildStartQueryCommand();
 		comm.send_object_sync(start, connections, k);
+		//System.out.println("Other sending complete!");
+		comm.send_object_sync(start, leafconnections, k);
 		lifeManager.tryTransitTo(LifecycleManager.AppStatus.QUERY_RUNNING);
+		System.out.println("=============Done============");
 		return true;
 	}
 	

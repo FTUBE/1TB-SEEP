@@ -34,9 +34,9 @@ public class InputBuffer {
 	}
 	
 	public void readFrom(ReadableByteChannel channel, InputAdapter ia) {
-		
+		int a = 0;
 		if(header.remaining() > 0){
-			this.read(channel, header);
+			a = this.read(channel, header);
 		}
 		
 		if(payload == null && !header.hasRemaining()){
